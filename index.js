@@ -1,21 +1,37 @@
-// synchronous blocking
 console.log("Before");
-// getUser();
-const user = getUser(1);
-console.log(user);
-// setTimeout(() => {
-//   //this function is an example of async or non blocking function
-//   console.log("waiting for user to response");
-// }, 2000);
+getUser(1, (user) => {
+  getRepositories(user.gitHubUsername, (repos) => {
+    getCommits(repos[0], (commits) => {
+      console.log(commits);
+    });
+  });
+});
 console.log("After");
 
 function getUser(id) {
-  setTimeout(() => {
-    console.log("waiting for user to response");
-    return { id: id, gitHubUser: "om" };
-  }, 3000);
-  //   return 1;
+  return new Promise((resolve, reject) => {
+    // kickoff some async work
+    setTimeout(() => {
+      console.log("Reading a user from a database...");
+      resolve({ id: id, gitHubUsername: "om" });
+    }, 2000);
+  });
 }
-// callback
-// promise
-// async/await
+
+function getRepositories(username) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      console.log("Calling GitHub API...");
+      resolve(["repo1", "repo2", "repo3"]);
+    }, 2000);
+  });
+}
+
+function getCommits(repo) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      console.log("Calling GitHub API...");
+      resolve(["commit"]);
+    }, 2000);
+  });
+}
